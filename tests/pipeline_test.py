@@ -101,7 +101,7 @@ def test_embed_to_file(tmp_path):
 def test_married_life_file():
     input_path = (
         Path(__file__).resolve().parent.parent
-        / "data" / "input" / "married_life.wav"
+        / "input" / "married_life.wav"
     )
     if not input_path.exists():
         pytest.skip(f"file tidak ditemukan: {input_path}")

@@ -6,7 +6,7 @@ Jalankan sebagai script:
 
 Atau import:
     from src.benchmark import run_benchmark
-    df = run_benchmark("data/input/married_life.wav", "benchmark")
+    df = run_benchmark("input/married_life.wav" "benchmark")
 
 Output:
     output/benchmark_results.csv   -> tabel hasil
@@ -202,7 +202,7 @@ def plot_benchmark(df: pd.DataFrame, output_path, title="Sonicrypt Benchmark") -
 
 
 def main() -> int:
-    input_path = Path("data/input/married_life.wav")
+    input_path = Path("input/married_life.wav")
     if not input_path.exists():
         print(f"ERROR: {input_path} tidak ditemukan")
         print("Taruh WAV PCM 16-bit di path tersebut, atau panggil run_benchmark() langsung.")

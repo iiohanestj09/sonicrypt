@@ -10,7 +10,7 @@ import pytest
 from src.stego import read_wav, write_wav
 
 INPUT_WAV = (
-    Path(__file__).resolve().parent.parent / "data" / "input" / "married_life.wav"
+    Path(__file__).resolve().parent.parent / "input" / "married_life.wav"
 )
 
 

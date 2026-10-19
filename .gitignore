@@ -13,8 +13,7 @@ dist/
 htmlcov/
 
 # Data audio
-data/input/*.wav
-data/samples/*.wav
+input/*.wav
 
 # Output yang bisa di-generate ulang
 output/*.wav
