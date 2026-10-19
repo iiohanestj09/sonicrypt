@@ -4,16 +4,23 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+build/
+dist/
 
-# Data audi
-data/*.wav
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data audio
+data/input/*.wav
 data/samples/*.wav
 
-# Hasil uji
-results/*.png
-results/*.jpg
+# Output yang bisa di-generate ulang
+output/*.wav
+output/*.png
 
-# File stego hasil uji
+# File stego sementara
 *.stego.wav
 
 # OS
@@ -23,3 +30,4 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+*.log
