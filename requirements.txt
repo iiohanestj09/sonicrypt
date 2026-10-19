@@ -1,0 +1,6 @@
+numpy>=1.26
+cryptography>=42.0
+streamlit>=1.33
+matplotlib>=3.8
+soundfile>=0.12
+pandas>=2.0

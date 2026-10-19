@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Data audi
+data/*.wav
+data/samples/*.wav
+
+# Hasil uji
+results/*.png
+results/*.jpg
+
+# File stego hasil uji
+*.stego.wav
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
