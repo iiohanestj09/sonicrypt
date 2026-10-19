@@ -1,17 +1,3 @@
-"""
-Modul kriptografi untuk Sonicrypt.
-Menggunakan AES-256-GCM (Authenticated Encryption) dari library cryptography.
-
-Format output encrypt():
-    [ nonce (12 byte) ][ ciphertext (n byte) ][ tag (16 byte) ]
-    └─────────────────────────────────────────────────────────┘
-    dikembalikan oleh AESGCM.encrypt() sebagai satu kesatuan
-
-Kontrak:
-    encrypt(plaintext, passphrase) -> bytes  (nonce || ct || tag)
-    decrypt(blob, passphrase)      -> bytes  (plaintext)
-    decrypt dengan passphrase salah -> raise InvalidTag
-"""
 import hashlib
 import os
 
@@ -22,13 +8,6 @@ TAG_SIZE = 16     # 128-bit authentication tag
 
 
 def derive_key(passphrase: str) -> bytes:
-    """
-    Turunkan key 256-bit dari passphrase menggunakan SHA-256.
-
-    Catatan: cara ini sederhana, cukup untuk tugas kuliah.
-    Untuk produksi gunakan KDF yang benar (PBKDF2, scrypt, Argon2)
-    dengan salt, karena SHA-256 murni rentan terhadap rainbow table.
-    """
     if not isinstance(passphrase, str):
         raise TypeError("passphrase harus string")
     if len(passphrase) == 0:
@@ -37,13 +16,6 @@ def derive_key(passphrase: str) -> bytes:
 
 
 def encrypt(plaintext: bytes, passphrase: str) -> bytes:
-    """
-    Enkripsi plaintext dengan AES-256-GCM.
-
-    Return: nonce (12 byte) || ciphertext || tag (16 byte).
-    Nonce dibuat acak setiap pemanggilan, jadi encrypt() dua kali
-    dengan input sama akan menghasilkan output berbeda.
-    """
     if not isinstance(plaintext, (bytes, bytearray)):
         raise TypeError("plaintext harus bytes")
     key = derive_key(passphrase)
@@ -54,13 +26,6 @@ def encrypt(plaintext: bytes, passphrase: str) -> bytes:
 
 
 def decrypt(blob: bytes, passphrase: str) -> bytes:
-    """
-    Dekripsi blob hasil encrypt().
-
-    Raise InvalidTag jika:
-    - passphrase salah
-    - data di-tamper (audio terkompresi, resample, dsb)
-    """
     if not isinstance(blob, (bytes, bytearray)):
         raise TypeError("blob harus bytes")
     if len(blob) < NONCE_SIZE + TAG_SIZE:
