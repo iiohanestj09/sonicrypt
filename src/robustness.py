@@ -128,7 +128,7 @@ def run_robustness(stego_bytes: bytes, passphrase: str) -> pd.DataFrame:
 
 
 def main() -> int:
-    input_path = Path("input/married_life.wav")
+    input_path = Path("input/Married_Life.wav")
     if not input_path.exists():
         print(f"ERROR: {input_path} tidak ditemukan.")
         return 1

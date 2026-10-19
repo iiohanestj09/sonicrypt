@@ -96,12 +96,12 @@ def test_embed_to_file(tmp_path):
 
 
 #^ P7 — File WAV asli 48 MB
-# Verifikasi: embed + extract pada married_life.wav sungguhan,
+# Verifikasi: embed + extract pada Married_Life.wav sungguhan,
 # sekaligus cek SNR tetap tinggi. Skip kalau file tidak ada.
 def test_married_life_file():
     input_path = (
         Path(__file__).resolve().parent.parent
-        / "input" / "married_life.wav"
+        / "input" / "Married_Life.wav"
     )
     if not input_path.exists():
         pytest.skip(f"file tidak ditemukan: {input_path}")

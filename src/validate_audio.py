@@ -6,7 +6,7 @@ Mengecek apakah file WAV memenuhi syarat sebagai input sistem:
   - Tidak terkompresi (comptype = NONE)
 
 Usage:
-  python -m src.validate_audio input/married_life.wav
+  python -m src.validate_audio input/Married_Life.wav
   python -m src.validate_audio input/                # semua *.wav di folder
   python -m src.validate_audio file1.wav file2.wav
 

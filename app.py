@@ -544,7 +544,7 @@ with tab_terima:
 # =====================================================================
 with tab_uji:
     st.markdown("### 📊 Hasil Pengujian")
-    st.caption("Benchmark 10 payload dan robustness test pada audio uji `married_life.wav`.")
+    st.caption("Benchmark 10 payload dan robustness test pada audio uji `Married_Life.wav`.")
     st.markdown("")
 
     csv_path = Path("output/benchmark_results.csv")
