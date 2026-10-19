@@ -2,6 +2,7 @@
 Audio steganography untuk Sonicrypt.
 I/O file WAV PCM 16-bit.
 """
+import io
 import wave
 from pathlib import Path
 
@@ -9,12 +10,28 @@ import numpy as np
 
 
 def read_wav(path) -> tuple[np.ndarray, dict]:
+    """
+    Baca file WAV dan return (samples, params).
+    Hanya menerima WAV PCM 16-bit tidak terkompresi.
+    """
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"file tidak ditemukan: {path}")
+    return read_wav_bytes(path.read_bytes())
+
+
+def read_wav_bytes(data: bytes) -> tuple[np.ndarray, dict]:
+    """
+    Baca WAV dari bytes in-memory (cocok untuk Streamlit upload).
+    Validasi sama dengan read_wav.
+    """
+    if not isinstance(data, (bytes, bytearray)):
+        raise TypeError(f"data harus bytes, dapat {type(data).__name__}")
+    if len(data) == 0:
+        raise ValueError("data WAV kosong")
 
     try:
-        with wave.open(str(path), "rb") as w:
+        with wave.open(io.BytesIO(bytes(data)), "rb") as w:
             nchannels = w.getnchannels()
             sampwidth = w.getsampwidth()
             framerate = w.getframerate()
@@ -56,6 +73,14 @@ def read_wav(path) -> tuple[np.ndarray, dict]:
 
 
 def write_wav(path, samples, params) -> None:
+    """Tulis array sample int16 ke file WAV sesuai params."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(wav_bytes(samples, params))
+
+
+def wav_bytes(samples, params) -> bytes:
+    """Serialisasi samples + params menjadi bytes WAV."""
     if not isinstance(samples, np.ndarray):
         raise TypeError(
             f"samples harus numpy array, dapat {type(samples).__name__}"
@@ -72,13 +97,14 @@ def write_wav(path, samples, params) -> None:
             f"nchannels ({nchannels})"
         )
 
-    path = Path(path)
-    with wave.open(str(path), "wb") as w:
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
         w.setnchannels(nchannels)
         w.setsampwidth(params["sampwidth"])
         w.setframerate(params["framerate"])
         w.setcomptype(params["comptype"], params["compname"])
         w.writeframes(samples.tobytes())
+    return buf.getvalue()
         
 def bytes_to_bits(data: bytes) -> np.ndarray:
     """
