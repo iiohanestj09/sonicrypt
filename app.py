@@ -23,113 +23,281 @@ st.set_page_config(
 
 CUSTOM_CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
-html, body, [class*="css"] {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+:root {
+    --accent: #c62828;
+    --accent-dark: #a3151a;
+    --accent-soft: #fff1f1;
+    --ink: #242124;
+    --muted: #746d70;
+    --line: #eee5e5;
+    --surface: #ffffff;
+    --shadow-card: 0 10px 30px rgba(77, 26, 26, 0.07), 0 2px 6px rgba(77, 26, 26, 0.04);
+}
+
+html, body, [class*="css"], button, input, textarea {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+    background: #ffffff !important;
+    color: var(--ink);
 }
 #MainMenu, footer, header {visibility: hidden;}
-.block-container {padding-top: 2rem; padding-bottom: 3rem; max-width: 1200px;}
+.block-container {padding: 1.5rem 2rem 3.5rem; max-width: 1320px;}
 
 /* Hero */
-.hero {text-align: center; padding: 24px 20px 36px;}
+.hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 46px 24px 40px;
+    margin: 0 0 28px;
+    border: 1px solid #f1dddd;
+    border-radius: 26px;
+    background: radial-gradient(ellipse at 50% -35%, #ffe4e4 0%, #fff8f8 48%, #ffffff 82%);
+    box-shadow: 0 14px 36px rgba(128, 25, 25, 0.07);
+}
+.hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border: 1px solid rgba(198, 40, 40, 0.10);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.hero::before {top: -112px; left: 8%;}
+.hero::after {right: 8%; bottom: -132px; width: 220px; height: 220px;}
 .hero-title {
-    font-size: 4.2rem; font-weight: 900;
-    background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text; letter-spacing: -0.03em; line-height: 1; margin: 0;
+    position: relative;
+    z-index: 1;
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.065em;
+    line-height: 1;
+    margin: 0;
 }
 .hero-subtitle {
-    color: #94a3b8; font-size: 1.05rem;
-    margin-top: 14px; font-weight: 500;
+    position: relative;
+    z-index: 1;
+    color: #65585a;
+    font-size: 1.05rem;
+    margin: 16px auto 0;
+    font-weight: 500;
 }
 .hero-badge {
-    display: inline-block; padding: 7px 16px;
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.4);
-    border-radius: 100px; color: #c4b5fd;
-    font-size: 0.82rem; font-weight: 600; margin-top: 18px;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 1px solid #efcaca;
+    border-radius: 100px;
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.035em;
+    margin-top: 20px;
+    box-shadow: 0 3px 10px rgba(128, 25, 25, 0.06);
 }
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 8px; background: rgba(30, 41, 59, 0.5);
-    padding: 8px; border-radius: 14px; margin-bottom: 24px;
+    display: flex !important;
+    align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
+    gap: 6px;
+    padding: 7px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #faf8f8;
+    box-shadow: 0 4px 14px rgba(45, 25, 25, 0.04);
 }
 .stTabs [data-baseweb="tab"] {
-    height: 50px; padding: 0 24px; background: transparent;
-    border-radius: 10px; font-weight: 600; color: #94a3b8;
-    border: none; transition: all 0.2s ease;
+    flex: 1 1 0%;
+    justify-content: center;
+    min-width: 0;
+    height: 48px;
+    padding: 0 12px;
+    border-radius: 11px;
+    color: #655d5f;
+    font-size: 0.94rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
-.stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-    color: white !important;
-    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+.stTabs [data-baseweb="tab"]:hover {
+    color: var(--accent);
+    background: #fff0f0;
+}
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, #cf3333, #ad171d);
+    color: #ffffff !important;
+    box-shadow: 0 5px 13px rgba(174, 25, 31, 0.22);
+}
+.stTabs [data-baseweb="tab-highlight"] {background-color: transparent;}
+
+/* Bordered containers as elevated cards */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    position: relative;
+    border: 1px solid var(--line) !important;
+    border-radius: 18px !important;
+    background: var(--surface) !important;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    border-color: #e9c4c4 !important;
+    box-shadow: 0 14px 34px rgba(77, 26, 26, 0.10), 0 3px 8px rgba(77, 26, 26, 0.04);
 }
 
-/* Cards */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 16px !important;
-    border: 1px solid rgba(139, 92, 246, 0.2) !important;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(6, 182, 212, 0.03) 100%);
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--ink) !important;
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.035em;
 }
+h2, h3 {margin-bottom: 0.35rem !important;}
+[data-testid="stCaptionContainer"] {color: var(--muted);}
 
 /* Buttons */
 .stButton > button, .stDownloadButton > button {
+    min-height: 44px;
+    border: 1px solid #eadada !important;
     border-radius: 12px !important;
-    font-weight: 600 !important;
-    border: none !important;
-    padding: 12px 24px !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25) !important;
+    background: #ffffff !important;
+    color: #4a3638 !important;
+    font-weight: 700 !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+    box-shadow: 0 3px 9px rgba(65, 24, 24, 0.06) !important;
 }
 .stButton > button:hover, .stDownloadButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.45) !important;
+    border-color: #d98989 !important;
+    box-shadow: 0 8px 18px rgba(140, 30, 30, 0.12) !important;
+    color: var(--accent-dark) !important;
 }
-.stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%) !important;
-    color: white !important;
+.stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {
+    border: 1px solid var(--accent) !important;
+    background: linear-gradient(135deg, #d83b3b 0%, #b51e25 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 15px rgba(181, 30, 37, 0.22) !important;
+}
+.stButton > button[kind="primary"]:hover, .stDownloadButton > button[kind="primary"]:hover {
+    border-color: #99151b !important;
+    box-shadow: 0 9px 20px rgba(181, 30, 37, 0.30) !important;
+}
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible {
+    outline: 3px solid rgba(198, 40, 40, 0.22) !important;
+    outline-offset: 2px;
 }
 
-/* Metrics */
-div[data-testid="stMetricValue"] {
-    font-weight: 800 !important; color: #a78bfa !important;
-    font-size: 1.8rem !important;
+/* Form controls */
+.stTextInput input, .stTextArea textarea, [data-baseweb="select"] > div {
+    border-radius: 11px !important;
+    border-color: #e8dddd !important;
+    background: #ffffff !important;
+    color: var(--ink) !important;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
-div[data-testid="stMetricLabel"] {
-    color: #94a3b8 !important; font-weight: 500 !important;
+.stTextInput input:focus, .stTextArea textarea:focus {
+    border-color: #cf5555 !important;
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.10) !important;
+}
+.stTextInput label, .stTextArea label, [data-testid="stFileUploader"] label {
+    color: #453b3d !important;
+    font-weight: 700 !important;
 }
 
 /* File uploader */
 [data-testid="stFileUploader"] > section {
-    border: 2px dashed rgba(139, 92, 246, 0.3) !important;
+    border: 1.5px dashed #e4baba !important;
     border-radius: 14px !important;
-    background: rgba(139, 92, 246, 0.03) !important;
-    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #fffafa, #fff4f4) !important;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 [data-testid="stFileUploader"] > section:hover {
-    border-color: rgba(139, 92, 246, 0.6) !important;
-    background: rgba(139, 92, 246, 0.08) !important;
+    border-color: var(--accent) !important;
+    background: #fff0f0 !important;
+    box-shadow: 0 5px 14px rgba(160, 30, 30, 0.07);
+}
+[data-testid="stFileUploader"] button {
+    border-radius: 9px !important;
+    border-color: #e4baba !important;
+    background: #ffffff !important;
+    color: var(--accent-dark) !important;
+    font-weight: 700 !important;
 }
 
-/* Inputs */
-.stTextInput > div > div > input,
-.stTextArea > div > div > textarea {
-    border-radius: 10px !important;
-    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+/* Metrics */
+[data-testid="stMetric"] {
+    padding: 15px 17px;
+    border: 1px solid #f0e5e5;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #ffffff, #fffafa);
+    box-shadow: 0 4px 12px rgba(77, 26, 26, 0.04);
+}
+[data-testid="stMetricLabel"] {
+    color: var(--muted) !important;
+    font-weight: 600 !important;
+}
+[data-testid="stMetricValue"] {
+    color: var(--accent-dark) !important;
+    font-family: 'Space Grotesk', 'DM Sans', sans-serif !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
 }
 
-/* Headings */
-h1, h2, h3 {color: #e2e8f0 !important; font-weight: 700 !important;}
-
-/* Alerts */
-div[data-testid="stAlert"] {border-radius: 12px !important; border: none !important;}
+/* Alerts, expanders, tables, and media */
+div[data-testid="stAlert"] {
+    border-radius: 13px !important;
+    border: 1px solid #f0e4e4 !important;
+    box-shadow: 0 3px 10px rgba(77, 26, 26, 0.04);
+}
+[data-testid="stExpander"] {
+    border: 1px solid var(--line) !important;
+    border-radius: 13px !important;
+    background: #ffffff;
+    overflow: hidden;
+}
+[data-testid="stExpander"] summary:hover {color: var(--accent-dark);}
+[data-testid="stDataFrame"], [data-testid="stTable"] {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+[data-testid="stAudio"] {border-radius: 13px;}
 
 /* Download caption under button */
 .dl-hint {
-    color: #64748b; font-size: 0.82rem;
-    margin-top: 6px; text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+    margin-top: 6px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .block-container {padding: 1rem 1rem 2.5rem;}
+    .hero {padding: 36px 16px 30px; border-radius: 20px;}
+    .hero-subtitle {font-size: 0.95rem;}
+    .stTabs [data-baseweb="tab-list"] {
+        justify-content: flex-start;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #d99a9a #faf8f8;
+    }
+    .stTabs [data-baseweb="tab"] {
+        flex: 0 0 auto;
+        min-width: max-content;
+        height: 44px;
+        padding: 0 12px;
+        font-size: 0.82rem;
+    }
 }
 </style>
 """
@@ -175,11 +343,26 @@ def _notify_on_download(button_text: str = "Unduh Audio Stego") -> None:
                 buttons[i].dataset.toastAttached = '1';
                 buttons[i].addEventListener('click', function() {{
                     var toast = parent.createElement('div');
-                    toast.innerHTML = '<span style="font-size: 18px; margin-right: 8px;">📥</span> Download dimulai — cek folder Download';
-                    toast.style.cssText = 'position: fixed; bottom: 32px; right: 32px; background: linear-gradient(135deg, #8b5cf6, #06b6d4); color: white; padding: 16px 24px; border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.5); font-weight: 600; font-size: 15px; z-index: 999999; font-family: Inter, sans-serif; transition: opacity 0.4s;';
+                    toast.setAttribute('role', 'status');
+                    toast.style.cssText = 'position: fixed; bottom: 32px; right: 32px; display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #cf3333, #a3151a); color: white; padding: 14px 16px 14px 20px; border-radius: 14px; box-shadow: 0 12px 32px rgba(100,20,20,0.28); font-weight: 600; font-size: 15px; z-index: 999999; font-family: "DM Sans", sans-serif; transition: opacity 0.4s;';
+                    var message = parent.createElement('span');
+                    message.textContent = '📥 Download dimulai — cek folder Download';
+                    var closeButton = parent.createElement('button');
+                    closeButton.type = 'button';
+                    closeButton.textContent = '×';
+                    closeButton.setAttribute('aria-label', 'Tutup notifikasi download');
+                    closeButton.style.cssText = 'border: 0; background: transparent; color: white; cursor: pointer; font-size: 24px; line-height: 1; padding: 0 2px;';
+                    toast.appendChild(message);
+                    toast.appendChild(closeButton);
                     parent.body.appendChild(toast);
-                    setTimeout(function() {{ toast.style.opacity = '0'; }}, 2500);
-                    setTimeout(function() {{ toast.remove(); }}, 3000);
+                    var dismissTimer;
+                    function dismissToast() {{
+                        parent.clearTimeout(dismissTimer);
+                        toast.style.opacity = '0';
+                        parent.setTimeout(function() {{ toast.remove(); }}, 400);
+                    }}
+                    closeButton.addEventListener('click', dismissToast);
+                    dismissTimer = parent.setTimeout(dismissToast, 3000);
                 }});
                 break;
             }}
