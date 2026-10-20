@@ -24,7 +24,7 @@ import pandas as pd
 from cryptography.exceptions import InvalidTag
 from scipy import signal
 
-from src.pipeline import embed, extract
+from src.pipeline import embed, extract, HEADER_SIZE
 from src.stego import read_wav_bytes, wav_bytes
 
 
@@ -80,6 +80,45 @@ def _attack_volume(samples: np.ndarray, factor: float = 0.8) -> np.ndarray:
     return np.clip(scaled, -32768, 32767).astype(np.int16)
 
 
+def _attack_single_bit_flip(samples: np.ndarray, params: dict) -> np.ndarray:
+    """
+    Ubah 1 bit LSB di area ciphertext (setelah header).
+    Header MAGIC tetap utuh, hanya ciphertext yang rusak.
+    Hasil yang diharapkan: InvalidTag dari AES-GCM.
+    """
+    # Header 10 byte = 80 sample. Sample ke-100 aman di area ciphertext.
+    target = HEADER_SIZE * 8 + 20  # = 100
+    if target >= len(samples):
+        raise ValueError(f"audio terlalu pendek (butuh > {target} sample)")
+    tampered = samples.copy()
+    tampered[target] = tampered[target] ^ 1
+    return tampered
+
+
+def _attack_ciphertext_noise(samples: np.ndarray, params: dict,
+                              snr_db: float = 40.0, seed: int = 0) -> np.ndarray:
+    """
+    Tambah noise HANYA di area ciphertext. Header tetap utuh.
+    Hasil: MAGIC lolos, tapi ciphertext rusak -> InvalidTag.
+    """
+    header_samples = HEADER_SIZE * 8
+    if len(samples) <= header_samples:
+        raise ValueError("audio terlalu pendek")
+
+    tampered = samples.copy()
+    cipher = tampered[header_samples:].astype(np.float64)
+    power_signal = float(np.mean(cipher ** 2))
+    if power_signal == 0.0:
+        raise ValueError("ciphertext area seluruhnya nol")
+
+    power_noise = power_signal / (10 ** (snr_db / 10.0))
+    rng = np.random.default_rng(seed)
+    noise = rng.normal(0, np.sqrt(power_noise), cipher.shape)
+    noisy = cipher + noise
+    tampered[header_samples:] = np.clip(noisy, -32768, 32767).astype(np.int16)
+    return tampered
+
+
 def run_robustness(stego_bytes: bytes, passphrase: str) -> pd.DataFrame:
     """Jalankan semua attack, catat hasil ekstraksi."""
     samples, params = read_wav_bytes(stego_bytes)
@@ -90,6 +129,8 @@ def run_robustness(stego_bytes: bytes, passphrase: str) -> pd.DataFrame:
         "Resample (48k -> 44.1k)": lambda: _attack_resample(samples, params, 44100),
         "Crop (1 detik awal)": lambda: _attack_crop(samples, params, 1.0),
         "Volume (-20%)": lambda: (_attack_volume(samples, 0.8), params),
+        "Single-bit flip (ciphertext)": lambda: (_attack_single_bit_flip(samples, params), params),
+        "Noise in ciphertext (40 dB)": lambda: (_attack_ciphertext_noise(samples, params, 40.0), params),
     }
 
     results = []

@@ -450,7 +450,7 @@ with tab_kirim:
                         st.download_button(
                             label="⬇️ Unduh Audio Stego",
                             data=stego_bytes,
-                            file_name=f"stego_{source_name or 'audio.wav'}",
+                            file_name=f"STEGO_{source_name or 'audio.wav'}",
                             mime="audio/wav",
                             key="download_stego",
                             use_container_width=True,

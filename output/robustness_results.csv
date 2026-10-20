@@ -1,0 +1,8 @@
+attack,status,error,plaintext_len
+None (baseline),SUKSES (Bocor!),-,43
+Add Noise (30 dB),GAGAL (Aman),"MAGIC tidak cocok: b'\r\xd8D""@\x04' != b'SONIC1' (audio b...",0
+Resample (48k -> 44.1k),GAGAL (Aman),MAGIC tidak cocok: b'\x81\x05 $\x00\x00' != b'SONIC1' (au...,0
+Crop (1 detik awal),GAGAL (Aman),MAGIC tidak cocok: b'\x14\x97w\x8b>\x93' != b'SONIC1' (au...,0
+Volume (-20%),GAGAL (Aman),MAGIC tidak cocok: b'\x80\x00\x00\x00\x00\x00' != b'SONIC...,0
+Single-bit flip (ciphertext),GAGAL (Aman),InvalidTag (tampered),0
+Noise in ciphertext (40 dB),GAGAL (Aman),InvalidTag (tampered),0

@@ -91,3 +91,36 @@ def test_single_bit_tamper_ciphertext():
 
     with pytest.raises(InvalidTag):
         extract(tampered_wav, "abc")
+        
+#^ R6 — Single-bit flip di ciphertext memicu InvalidTag
+# Verifikasi: ubah 1 sample di area ciphertext (bukan header). MAGIC
+# harus lolos, tapi AES-GCM menolak karena tag tidak cocok.
+def test_single_bit_flip_ciphertext():
+    from src.pipeline import HEADER_SIZE
+    audio = _make_audio_wav()
+    stego_bytes, _ = embed(audio, b"rahasia", "abc")
+    samples, params = read_wav_bytes(stego_bytes)
+
+    target = HEADER_SIZE * 8 + 20  # = 100, di area ciphertext
+    tampered = samples.copy()
+    tampered[target] = tampered[target] ^ 1
+    tampered_wav = wav_bytes(tampered, params)
+
+    with pytest.raises(InvalidTag):
+        extract(tampered_wav, "abc")
+
+
+#^ R7 — Noise di ciphertext (header utuh) memicu InvalidTag
+# Verifikasi: noise SNR 40 dB hanya di area ciphertext. MAGIC harus
+# tetap utuh, tapi ciphertext rusak -> InvalidTag.
+def test_ciphertext_noise_triggers_invalid_tag():
+    from src.robustness import _attack_ciphertext_noise
+    audio = _make_audio_wav()
+    stego_bytes, _ = embed(audio, b"rahasia panjang untuk uji noise ciphertext", "abc")
+    samples, params = read_wav_bytes(stego_bytes)
+
+    tampered = _attack_ciphertext_noise(samples, params, snr_db=40.0, seed=42)
+    tampered_wav = wav_bytes(tampered, params)
+
+    with pytest.raises(InvalidTag):
+        extract(tampered_wav, "abc")
