@@ -50,6 +50,9 @@ html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"]
 .hero {
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     padding: 46px 24px 40px;
     margin: 0 0 28px;
@@ -57,6 +60,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"]
     border-radius: 26px;
     background: radial-gradient(ellipse at 50% -35%, #ffe4e4 0%, #fff8f8 48%, #ffffff 82%);
     box-shadow: 0 14px 36px rgba(128, 25, 25, 0.07);
+    gap: 22px;
 }
 .hero::before, .hero::after {
     content: "";
@@ -78,14 +82,14 @@ html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"]
     color: var(--accent);
     letter-spacing: -0.065em;
     line-height: 1;
-    margin: 0;
+    margin: 0 !important;
 }
 .hero-subtitle {
     position: relative;
     z-index: 1;
     color: #65585a;
     font-size: 1.05rem;
-    margin: 16px auto 0;
+    margin: 0 !important;
     font-weight: 500;
 }
 .hero-badge {
@@ -100,7 +104,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"]
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.035em;
-    margin-top: 20px;
+    margin: 0;
     box-shadow: 0 3px 10px rgba(128, 25, 25, 0.06);
 }
 
